@@ -10,7 +10,7 @@
       }
     </style>
   </head>
-  <body>
+    <body>
     <micro-app
       image="https://avatars.githubusercontent.com/u/14011130"
       name="Ice Rao"
@@ -78,6 +78,7 @@
         >
       </div>
       <img class="image" />
+      <slot name="attributes"><p>Other</p></slot>
     </template>
 
     <script>
@@ -85,6 +86,7 @@
       class MicroApp extends HTMLElement {
         constructor() {
           super();
+          console.log('constructor 当组件被创建时')
           var templateElem = document.getElementById("microAppTemplate");
           var content = templateElem.content.cloneNode(true);
           content
@@ -94,14 +96,42 @@
             this.getAttribute("name");
           content.querySelector(".container>.github").innerText =
             this.getAttribute("github");
+          
           /* 不带shadowDom */
           this.append(content);
+          const myEvent = new CustomEvent("myEvent", {
+            detail: "这是子组件传过来的消息",
+          });
           this.querySelector("a").addEventListener("click", () => {
-            alert("Click successful!");
+            this.dispatchEvent(myEvent)
           });
         }
+
+        connectedCallback(){
+          console.log('connectedCallback 当组件被插入到 dom 中时调用')
+        }
+
+        disconnectedCallback(){
+          console.log('disconnectedCallback 当组件从 dom 中被移除时调用')
+        }
+
+        adoptedCallback(){
+          console.log('当自定义元素移动到新文档时调用')
+        }
+
+        attributeChangedCallback(){
+          console.log('attributeChangedCallback 当传入属性改变时调用')
+        }
+
       }
       window.customElements.define("micro-app", MicroApp);
+
+      //接收子应用过来的消息
+      const myComponent = document.querySelector('#myComponent')
+      myComponent.addEventListener('myEvent', val => {
+        console.log(val)
+      })
+
     </script>
   </body>
 </html>
