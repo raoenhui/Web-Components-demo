@@ -10,7 +10,7 @@
       }
     </style>
   </head>
-    <body>
+  <body>
     <micro-app
       image="https://avatars.githubusercontent.com/u/14011130"
       name="Ice Rao"
@@ -34,6 +34,7 @@
           box-sizing: border-box;
           font-family: "Poppins", sans-serif;
         }
+
         .image {
           flex: 0 0 auto;
           width: 160px;
@@ -41,11 +42,13 @@
           vertical-align: middle;
           border-radius: 5px;
         }
+
         .container {
           box-sizing: border-box;
           padding: 20px;
           height: 160px;
         }
+
         .container > .name {
           font-size: 20px;
           font-weight: 600;
@@ -53,6 +56,7 @@
           margin: 0;
           margin-bottom: 5px;
         }
+
         .container > .email {
           font-size: 12px;
           opacity: 0.75;
@@ -60,6 +64,7 @@
           margin: 0;
           margin-bottom: 15px;
         }
+
         .container > .button {
           padding: 10px 25px;
           font-size: 12px;
@@ -72,21 +77,22 @@
 
       <div class="container">
         <p class="name"></p>
+        <a href="https://github.com/raoenhui" target="_blank">Follow Ice</a>
         <p class="github"></p>
-        <a class="button" href="https://github.com/raoenhui" target="_blank"
-          >Follow Ice</a
-        >
+
+        <button class="button">send message</button>
       </div>
       <img class="image" />
-      <slot name="attributes"><p>Other</p></slot>
+      <slot name="attributes">
+        <p>Other</p>
+      </slot>
     </template>
-
     <script>
       //https://www.ruanyifeng.com/blog/2019/08/web_components.html
       class MicroApp extends HTMLElement {
         constructor() {
           super();
-          console.log('constructor 当组件被创建时')
+          console.log("constructor 当组件被创建时");
           var templateElem = document.getElementById("microAppTemplate");
           var content = templateElem.content.cloneNode(true);
           content
@@ -96,42 +102,42 @@
             this.getAttribute("name");
           content.querySelector(".container>.github").innerText =
             this.getAttribute("github");
-          
-          /* 不带shadowDom */
+
           this.append(content);
+
           const myEvent = new CustomEvent("myEvent", {
             detail: "这是子组件传过来的消息",
           });
-          this.querySelector("a").addEventListener("click", () => {
-            this.dispatchEvent(myEvent)
+          this.querySelector("button").addEventListener("click", () => {
+            this.dispatchEvent(myEvent);
           });
         }
 
-        connectedCallback(){
-          console.log('connectedCallback 当组件被插入到 dom 中时调用')
+        connectedCallback() {
+          console.log("connectedCallback 当组件被插入到 dom 中时调用");
         }
 
-        disconnectedCallback(){
-          console.log('disconnectedCallback 当组件从 dom 中被移除时调用')
+        disconnectedCallback() {
+          console.log("disconnectedCallback 当组件从 dom 中被移除时调用");
         }
 
-        adoptedCallback(){
-          console.log('当自定义元素移动到新文档时调用')
+        adoptedCallback() {
+          console.log("当自定义元素移动到新文档时调用");
         }
 
-        attributeChangedCallback(){
-          console.log('attributeChangedCallback 当传入属性改变时调用')
+        attributeChangedCallback() {
+          console.log("attributeChangedCallback 当传入属性改变时调用");
         }
-
       }
       window.customElements.define("micro-app", MicroApp);
-
+    </script>
+    <script>
       //接收子应用过来的消息
-      const myComponent = document.querySelector('#myComponent')
-      myComponent.addEventListener('myEvent', val => {
-        console.log(val)
-      })
-
+      document
+        .getElementsByTagName("micro-app")[0]
+        .addEventListener("myEvent", (val) => {
+          alert(val.detail);
+        });
     </script>
   </body>
 </html>
