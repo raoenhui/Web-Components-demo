@@ -102,13 +102,24 @@
            */
           var shadow = this.attachShadow({ mode: "open" });
           shadow.appendChild(content);
-          this.$button = shadow.querySelector("a");
-          this.$button.addEventListener("click", () => {
-            alert('Click successful!');
+   
+          const myEvent = new CustomEvent("myEvent", {
+            detail: "这是子组件传过来的消息",
+          });
+          shadow.querySelector("a").addEventListener("click", () => {
+            this.dispatchEvent(myEvent);
           });
         }
       }
       window.customElements.define("micro-app", MicroApp);
+    </script>
+    <script>
+      //接收子应用过来的消息
+      document
+        .getElementsByTagName("micro-app")[0]
+        .addEventListener("myEvent", (val) => {
+          alert(val.detail);
+        });
     </script>
   </body>
 </html>
